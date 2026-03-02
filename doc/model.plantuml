@@ -4,6 +4,12 @@ skinparam packageStyle rectangle
 skinparam classAttributeIconSize 0
 
 ' =========================
+' RELACIONES ENTRE PAQUETES
+' =========================
+boundary ..> control
+control ..> entity
+
+' =========================
 ' PAQUETE ENTITY
 ' =========================
 package "entity" {
@@ -54,6 +60,16 @@ package "entity" {
 }
 
 ' =========================
+' RELACIONES ENTITY
+' =========================
+
+Alumno "1" -- "1" Matricula
+Matricula "1" -- "1" Ciclo
+Ciclo "1" -- "*" Modulo
+Alumno "1" -- "*" FaltaAsistencia
+FaltaAsistencia "*" -- "1" Modulo
+
+' =========================
 ' PAQUETE CONTROL
 ' =========================
 package "control" {
@@ -93,36 +109,5 @@ package "boundary" {
     + mostrarResumenFaltas(total: int): void
   }
 }
-
-boundary ..> control
-control ..> entity
-
-
-' =========================
-' RELACIONES ENTITY
-' =========================
-
-Alumno "1" -- "1" Matricula
-Matricula "1" -- "1" Ciclo
-Ciclo "1" -- "*" Modulo
-Alumno "1" -- "*" FaltaAsistencia
-FaltaAsistencia "*" -- "1" Modulo
-
-' =========================
-' RELACIONES CONTROL
-' =========================
-
-' MatriculaController --> Alumno
-' MatriculaController --> Ciclo
-' FaltasController --> Alumno
-' FaltasController --> FaltaAsistencia
-' FaltasController --> Modulo
-
-' =========================
-' RELACIONES BOUNDARY
-' =========================
-
-' ConsolaMatriculaUI --> MatriculaController
-' ConsolaFaltasUI --> FaltasController
 
 @enduml
