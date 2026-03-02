@@ -1,0 +1,128 @@
+@startuml
+title Gestión de Matrícula y Faltas - Aplicación de Consola
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+
+' =========================
+' PAQUETE ENTITY
+' =========================
+package "entity" {
+
+  class Alumno {
+    - id: int
+    - nombre: String
+    - apellidos: String
+    - dni: String
+    - email: String
+    - matricula: Matricula
+    --
+    + matricular(m: Matricula): void
+    + agregarFalta(f: FaltaAsistencia): void
+    + calcularTotalFaltas(): int
+  }
+
+  class Matricula {
+    - id: int
+    - fecha: Date
+    --
+    + confirmar(): void
+  }
+
+  class Ciclo {
+    - codigo: String
+    - nombre: String
+    - duracionHoras: int
+    --
+    + agregarModulo(m: Modulo): void
+    + obtenerModulo(codigo: String): Modulo
+  }
+
+  class Modulo {
+    - codigo: String
+    - nombre: String
+    - horasTotales: int
+  }
+
+  class FaltaAsistencia {
+    - id: int
+    - fecha: Date
+    - justificada: boolean
+    --
+    + justificar(): void
+    + estaJustificada(): boolean
+  }
+}
+
+' =========================
+' PAQUETE CONTROL
+' =========================
+package "control" {
+
+  class MatriculaController {
+    - alumnos: List<Alumno>
+    - ciclos: List<Ciclo>
+    --
+    + crearAlumno(datos): Alumno
+    + matricularAlumno(alumnoId: int, cicloCodigo: String): void
+    + buscarAlumno(id: int): Alumno
+  }
+
+  class FaltasController {
+    --
+    + registrarFalta(alumnoId: int, moduloCodigo: String, fecha: Date): void
+    + justificarFalta(faltaId: int): void
+    + obtenerFaltasAlumno(alumnoId: int): List<FaltaAsistencia>
+    + calcularTotalFaltas(alumnoId: int): int
+  }
+}
+
+' =========================
+' PAQUETE BOUNDARY
+' =========================
+package "boundary" {
+
+  class ConsolaMatriculaUI {
+    + mostrarMenu(): void
+    + solicitarDatosAlumno(): void
+    + mostrarResultado(mensaje: String): void
+  }
+
+  class ConsolaFaltasUI {
+    + solicitarDatosFalta(): void
+    + mostrarFaltasAlumno(): void
+    + mostrarResumenFaltas(total: int): void
+  }
+}
+
+boundary ..> control
+control ..> entity
+
+
+' =========================
+' RELACIONES ENTITY
+' =========================
+
+Alumno "1" -- "1" Matricula
+Matricula "1" -- "1" Ciclo
+Ciclo "1" -- "*" Modulo
+Alumno "1" -- "*" FaltaAsistencia
+FaltaAsistencia "*" -- "1" Modulo
+
+' =========================
+' RELACIONES CONTROL
+' =========================
+
+' MatriculaController --> Alumno
+' MatriculaController --> Ciclo
+' FaltasController --> Alumno
+' FaltasController --> FaltaAsistencia
+' FaltasController --> Modulo
+
+' =========================
+' RELACIONES BOUNDARY
+' =========================
+
+' ConsolaMatriculaUI --> MatriculaController
+' ConsolaFaltasUI --> FaltasController
+
+@enduml
