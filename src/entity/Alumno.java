@@ -1,5 +1,8 @@
 package entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Alumno {
 
     private int id;
@@ -9,12 +12,15 @@ public class Alumno {
     private String email;
     private Matricula matricula;
 
+    private List<FaltaAsistencia> faltas;
+
     public Alumno(int id, String nombre, String apellidos, String dni, String email) {
         this.id = id;
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.dni = dni;
         this.email = email;
+        this.faltas = new ArrayList<>();
     }
 
     public int getId() {
@@ -31,6 +37,18 @@ public class Alumno {
 
     public void matricular(Matricula matricula) {
         this.matricula = matricula;
+    }
+
+    public List<FaltaAsistencia> getFaltas() {
+        return faltas;
+    }
+
+    public void agregarFalta(FaltaAsistencia falta) {
+        faltas.add(falta);
+    }
+
+    public int calcularTotalFaltas() {
+        return faltas.size();
     }
 
     @Override
